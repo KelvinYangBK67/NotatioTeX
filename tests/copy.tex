@@ -1,0 +1,12 @@
+\documentclass{article}
+% XeTeX's native ActualText marks preserve the logical Unicode in shaped text.
+% This is PDF text metadata on the rendered glyphs, not a hidden overlay layer.
+\XeTeXgenerateactualtext=1
+\usepackage[chinese,arabic]{notatiotex}
+\NotatioSetHanFont{Noto Serif CJK SC}
+\NotatioSetArabicFont{Amiri}
+\begin{document}
+\NotatioHanMath{甲}
+\NotatioArabicMath{س}
+\NotatioArabicNumeral{12.5}
+\end{document}

@@ -1,0 +1,18 @@
+% Run from the repository root: ./tests/run-tests.sh
+\documentclass{article}
+\usepackage[chinese]{notatiotex}
+\NotatioSetHanFont{Noto Serif CJK SC} % Example font; not bundled.
+\NotatioDeclareSymbol{sample:stem}{\NotatioHanMath{甲}}
+\NotatioDeclareSymbol{sample:relation}{\NotatioHanMath[rel]{等}}
+\begin{document}
+\section*{Chinese notation: interface demonstration}
+This is a synthetic API sample, not a transcription of
+\emph{Dai weiji shiji} (a historical Chinese calculus text).
+
+Character in text: \NotatioHanMath{甲}.
+\[
+  \NotatioUseSymbol{sample:stem} + \NotatioHanMath{乙}
+  \NotatioUseSymbol{sample:relation} \NotatioHanMath{丙}
+\]
+The ordinary mathematical operators are still provided by LaTeX.
+\end{document}

@@ -1,0 +1,87 @@
+% NotatioTeX -- optional mathematical notation across writing traditions.
+% SPDX-License-Identifier: MIT
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesExplPackage{notatiotex}{2026-10-12}{0.1.0}
+  {Extensible notation support for XeLaTeX}
+\RequirePackage{iftex}
+\ifXeTeX\else
+  \PackageError{notatiotex}{XeLaTeX is required}
+    {Use xelatex to build this document.}
+  \expandafter\endinput
+\fi
+\RequirePackage{fontspec}
+\newif\ifnotatiochinese
+\newif\ifnotatioarabic
+\DeclareOption{chinese}{\notatiochinesetrue}
+\DeclareOption{arabic}{\notatioarabictrue}
+\DeclareOption{all}{\notatiochinesetrue\notatioarabictrue}
+\DeclareOption*{\PackageError{notatiotex}{Unknown option '\CurrentOption'}
+  {Available options: chinese, arabic, all.}}
+\ProcessOptions\relax
+
+\ExplSyntaxOn
+\prop_new:N \g__notatio_symbols_prop
+\msg_new:nnn { notatiotex } { unknown-symbol }
+  { Symbol~'#1'~has~not~been~declared. }
+\msg_new:nnn { notatiotex } { invalid-class }
+  { Invalid~math~class~'#1'.~Use~ord,~bin,~rel,~op,~open,~close,~punct,~or~inner. }
+
+% Explicit declarations only.  No blanket rewriting of LaTeX or Unicode.
+\NewDocumentCommand \NotatioDeclareSymbol { m m }
+  { \prop_gput:Nnn \g__notatio_symbols_prop {#1} {#2} }
+\NewDocumentCommand \NotatioUseSymbol { m }
+  {
+    \prop_get:NnNTF \g__notatio_symbols_prop {#1} \l_tmpa_tl
+      { \tl_use:N \l_tmpa_tl }
+      { \msg_error:nnn { notatiotex } { unknown-symbol } {#1} }
+  }
+
+\cs_new_protected:Npn \notatio_generic_font: { }
+\cs_new_protected:Npn \notatio_han_font: { }
+\cs_new_protected:Npn \notatio_arabic_font: { }
+\NewDocumentCommand \NotatioSetGlyphFont { m }
+  { \cs_gset_protected:Npn \notatio_generic_font: { \fontspec{#1} } }
+
+\cs_new_protected:Npn \notatio_select_font:n #1
+  {
+    \str_case:nn {#1}
+      {
+        {generic}{\notatio_generic_font:}
+        {han}{\notatio_han_font:}
+        {arabic}{\notatio_arabic_font:}
+      }
+  }
+\cs_new_protected:Npn \notatio_text_box:nn #1#2
+  { \hbox{\notatio_select_font:n {#1} #2} }
+\cs_new_protected:Npn \notatio_math_atom:nn #1#2
+  {
+    \str_case:nnF {#1}
+      {
+        {ord}{\mathord{#2}}
+        {bin}{\mathbin{#2}}
+        {rel}{\mathrel{#2}}
+        {op}{\mathop{#2}}
+        {open}{\mathopen{#2}}
+        {close}{\mathclose{#2}}
+        {punct}{\mathpunct{#2}}
+        {inner}{\mathinner{#2}}
+      }
+      { \msg_error:nnn { notatiotex } { invalid-class } {#1} }
+  }
+\cs_new_protected:Npn \notatio_glyph:nnn #1#2#3
+  {
+    \mode_if_math:TF
+      {\notatio_math_atom:nn {#1} {\notatio_text_box:nn {#2} {#3}}}
+      {\notatio_text_box:nn {#2} {#3}}
+  }
+\NewDocumentCommand \NotatioGlyph { O{ord} m }
+  {\notatio_glyph:nnn {#1} {generic} {#2}}
+\ExplSyntaxOff
+
+\ifnotatiochinese
+  \input{notatiotex-chinese.code.tex}
+\fi
+\ifnotatioarabic
+  \input{notatiotex-arabic.code.tex}
+\fi
+\endinput

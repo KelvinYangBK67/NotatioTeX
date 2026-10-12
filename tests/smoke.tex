@@ -1,0 +1,25 @@
+\documentclass{article}
+\usepackage[all]{notatiotex}
+\NotatioSetGlyphFont{Liberation Serif}
+\NotatioSetHanFont{Noto Serif CJK SC}
+\NotatioSetArabicFont{Amiri}
+\NotatioDeclareSymbol{test:replacement}{\NotatioHanMath{甲}}
+\NotatioDeclareSymbol{test:replacement}{\NotatioHanMath{乙}}
+\begin{document}
+Core: \NotatioGlyph{A}. Han: \NotatioHanMath{甲}.
+Arabic: \NotatioArabicMath{س}, \NotatioArabicNumeral{123.45}.
+\[
+  \NotatioUseSymbol{test:replacement} + \NotatioHanMath[bin]{丙}
+  \NotatioHanMath[rel]{等} \NotatioArabicNumeral{123.45}
+\]
+\[
+  \NotatioGlyph[ord]{A}
+  \NotatioGlyph[bin]{+}
+  \NotatioGlyph[rel]{=}
+  \NotatioGlyph[op]{S}
+  \NotatioGlyph[open]{(}
+  \NotatioGlyph[close]{)}
+  \NotatioGlyph[punct]{,}
+  \NotatioGlyph[inner]{Z}
+\]
+\end{document}

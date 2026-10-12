@@ -1,0 +1,9 @@
+% Chinese notation module (opt-in via [chinese]).
+% SPDX-License-Identifier: MIT
+\ExplSyntaxOn
+\NewDocumentCommand \NotatioSetHanFont { m }
+  {\cs_gset_protected:Npn \notatio_han_font: {\fontspec{#1}}}
+\NewDocumentCommand \NotatioHanMath { O{ord} m }
+  {\notatio_glyph:nnn {#1} {han} {#2}}
+\ExplSyntaxOff
+\endinput

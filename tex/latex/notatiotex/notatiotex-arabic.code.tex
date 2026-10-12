@@ -1,0 +1,27 @@
+% Arabic notation module (opt-in via [arabic]).
+% SPDX-License-Identifier: MIT
+\ExplSyntaxOn
+\NewDocumentCommand \NotatioSetArabicFont { m }
+  {\cs_gset_protected:Npn \notatio_arabic_font: {\fontspec{#1}}}
+\NewDocumentCommand \NotatioArabicMath { O{ord} m }
+  {\notatio_glyph:nnn {#1} {arabic} {#2}}
+
+% ASCII digits and a dot only; not a locale-dependent arithmetic parser.
+% The output preserves the input's logical digit order.
+\cs_new:Npn \notatio_arabic_digits:n #1
+  {
+    \str_map_inline:nn {#1}
+      {
+        \str_case:nnF {##1}
+          {
+            {0}{٠} {1}{١} {2}{٢} {3}{٣} {4}{٤}
+            {5}{٥} {6}{٦} {7}{٧} {8}{٨} {9}{٩}
+            {.}{٫}
+          }
+          {##1}
+      }
+  }
+\NewDocumentCommand \NotatioArabicNumeral { m }
+  {\notatio_glyph:nnn {ord} {arabic} {\notatio_arabic_digits:n {#1}}}
+\ExplSyntaxOff
+\endinput
